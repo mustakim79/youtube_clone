@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using System.Data;
-using System.Data.SqlClient;
 using System.Configuration;
+using System.Data.SqlClient;
 
 public partial class Admin_login : System.Web.UI.Page
 {
@@ -15,13 +9,14 @@ public partial class Admin_login : System.Web.UI.Page
     {
         con = new SqlConnection(ConfigurationManager.ConnectionStrings["sqlcon"].ConnectionString);
         con.Open();
+        //        Session["msg"] = null;
     }
     protected void btn_login_Click(object sender, EventArgs e)
     {
 
         try
         {
-            string qr = "SELECT * FROM admin WHERE name='" +name.Text.ToString() + "' AND password='" + password.Text.ToString() + "'";
+            string qr = "SELECT * FROM admin WHERE name='" + name.Text.ToString() + "' AND password='" + password.Text.ToString() + "'";
             //Response.Write(qr);
             SqlCommand cmd = new SqlCommand(qr, con);
             SqlDataReader reader = cmd.ExecuteReader();
@@ -29,11 +24,12 @@ public partial class Admin_login : System.Web.UI.Page
             {
                 //lbl.Text = reader["email"].ToString() + " " + reader["password"].ToString();
                 Session["admin"] = reader["name"].ToString();
+                Session["img"] = reader["img"].ToString();
                 Response.Redirect("Default.aspx");
             }
             else
             {
-                lbl.Text = "invalid";
+                Session["msg"] = "Invalid Password and Username";
             }
         }
         catch (Exception ee)
